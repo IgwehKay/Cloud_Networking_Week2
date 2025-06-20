@@ -77,7 +77,7 @@ ansible-playbook launch_windows.yaml
 
 1. Use RDP to connect: Click on the instance ID, click on connect, select RDP  (download `.rdp` file and get admin password from EC2 Console)
 2. Open the .rdp file, enter the password. 
-3. In the RDP terminal (as Administrator, or PowerShell (as Administrator), run:
+3. In the RDP terminal (as Administrator), or PowerShell (as Administrator), run:
 
 ```
 winrm quickconfig -q
