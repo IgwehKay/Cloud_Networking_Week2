@@ -10,9 +10,9 @@ Use Ansible to:
 ---
 
 ## 🔹 Step 1: Launch a Windows EC2 Instance using Ansible.
-After signing in to AWS via CLI  \n 
-On terminal, Create a file name: **launch_windows.yaml**  \n 
-nano launch_windows.yaml  \n 
+After signing in to AWS via CLI 
+On terminal, Create a file name: launch_windows.yaml
+nano launch_windows.yaml
 Input the code below
 ```
 ---
