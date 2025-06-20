@@ -10,10 +10,10 @@ Use Ansible to:
 ---
 
 ## 🔹 Step 1: Launch a Windows EC2 Instance using Ansible.
-*After signing in to AWS via CLI
-*On terminal, Create a file name: **launch_windows.yaml**
-*nano launch_windows.yaml
-*Input the code below
+\ After signing in to AWS via CLI
+\ On terminal, Create a file name: **launch_windows.yaml**
+\ nano launch_windows.yaml
+\ Input the code below
 ```
 ---
 - name: Launch Windows EC2 instance with WinRM pre-configured
