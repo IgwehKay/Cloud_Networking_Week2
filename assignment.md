@@ -9,16 +9,49 @@ Use Ansible to:
 
 ---
 
-## 🔹 Step 1: Launch a Windows EC2 Instance Manually
+## 🔹 Step 1: Launch a Windows EC2 Instance using Ansible
+```
+---
+- name: Launch Windows EC2 instance with WinRM pre-configured
+  hosts: localhost
+  connection: local
+  gather_facts: no
 
-Since the Ansible EC2 module caused issues, do this manually:
+  vars:
+    region: eu-north-1
+    key_name: mytest-demo-keypair
+    instance_type: t3.micro
+    ami_id: ami-0954c42276330704a  # Use actual Windows AMI in your region
+    security_group: sg-036c9f76a7ec36de8
+    subnet_id: subnet-0c3d3dd250bd9d418
 
-* Go to **AWS Console > EC2 > Launch Instance**
-* Choose:
+    user_data_script: |
+      <powershell>
+      winrm quickconfig -q
+      winrm set winrm/config/service/auth '@{Basic="true"}'
+      winrm set winrm/config/service '@{AllowUnencrypted="true"}'
+      netsh advfirewall firewall set rule group="Windows Remote Management" new enable=yes
+      net user ansibleadmin "P@ssw0rd123!" /add
+      net localgroup administrators ansibleadmin /add
+      Set-NetConnectionProfile -InterfaceAlias "Ethernet" -NetworkCategory Private
+      </powershell>
 
-  * **AMI**: Windows Server 2019/2022 Base
-  * **Instance type**: t2.micro (or higher)
-* Configure:
+  tasks:
+    - name: Launch EC2 Windows instance
+      community.aws.ec2_instance:
+        name: AnsibleWindowsServer
+        key_name: "{{ key_name }}"
+        instance_type: "{{ instance_type }}"
+        image_id: "{{ ami_id }}"
+        region: "{{ region }}"
+        wait: yes
+        state: present
+        count: 1
+        tags:
+          Name: AnsibleWindows
+        vpc_subnet_id: "{{ subnet_id }}"
+        security_group: "{{ security_group }}"
+        user_data: "{{ user_data_script }}"
 
   * Create/select key pair (.pem)
   * In Security Group:
