@@ -12,7 +12,7 @@ Use Ansible to:
 ## 🔹 Step 1: Launch a Windows EC2 Instance using Ansible.
 After signing in to AWS via CLI 
 
-On terminal, Create a file name: launch_windows.yaml
+On terminal, Create a file name: **launch_windows.yaml**
 
 nano launch_windows.yaml
 
@@ -68,8 +68,9 @@ Input the code below
     * ✅ Allow TCP port 5985 (WinRM HTTP) — Source: Custom, your IP `/32` or 0.0.0.0/0
 
 Launch the instance.
+```
 ansible-playbook launch_windows.yaml
-
+```
 ---
 
 ## 🔹 Step 2: Enable WinRM on the EC2 Instance (via RDP)
