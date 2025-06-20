@@ -9,7 +9,11 @@ Use Ansible to:
 
 ---
 
-## 🔹 Step 1: Launch a Windows EC2 Instance using Ansible
+## 🔹 Step 1: Launch a Windows EC2 Instance using Ansible.
+After signing in to AWS via CLI
+On terminal, Create a file name: **launch_windows.yaml**
+nano launch_windows.yaml
+Input the code below
 ```
 ---
 - name: Launch Windows EC2 instance with WinRM pre-configured
@@ -19,12 +23,13 @@ Use Ansible to:
 
   vars:
     region: eu-north-1
-    key_name: mytest-demo-keypair
+    key_name: yourkeypairfile
     instance_type: t3.micro
     ami_id: ami-0954c42276330704a  # Use actual Windows AMI in your region
-    security_group: sg-036c9f76a7ec36de8
-    subnet_id: subnet-0c3d3dd250bd9d418
+    security_group: sg-0*************
+    subnet_id: subnet-0**************
 
+#Setting up WinRM
     user_data_script: |
       <powershell>
       winrm quickconfig -q
@@ -52,14 +57,15 @@ Use Ansible to:
         vpc_subnet_id: "{{ subnet_id }}"
         security_group: "{{ security_group }}"
         user_data: "{{ user_data_script }}"
+```
 
-  * Create/select key pair (.pem)
-  * In Security Group:
+  * In Security Group of the Windows instance:
 
-    * ✅ Allow TCP **3389** (RDP)
-    * ✅ Allow TCP **5985** (WinRM HTTP) — Source: your IP `/32`
+    * ✅ Allow TCP port 3389 (RDP) Source - Custom 0.0.0.0/0
+    * ✅ Allow TCP port 5985 (WinRM HTTP) — Source: Custom, your IP `/32` or 0.0.0.0/0
 
 Launch the instance.
+ansible-playbook launch_windows.yaml
 
 ---
 
