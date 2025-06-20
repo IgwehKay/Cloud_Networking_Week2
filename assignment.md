@@ -75,10 +75,11 @@ ansible-playbook launch_windows.yaml
 
 ## 🔹 Step 2: Enable WinRM on the EC2 Instance (via RDP)
 
-1. Use RDP to connect (download `.rdp` file and get admin password from EC2 Console)
-2. In PowerShell (as Administrator), run:
+1. Use RDP to connect: Click on the instance ID, click on connect, select RDP  (download `.rdp` file and get admin password from EC2 Console)
+2. Open the .rdp file, enter the password. 
+3. In the RDP terminal (as Administrator, or PowerShell (as Administrator), run:
 
-```powershell
+```
 winrm quickconfig -q
 winrm set winrm/config/service/auth '@{Basic="true"}'
 winrm set winrm/config/service '@{AllowUnencrypted="true"}'
@@ -87,7 +88,7 @@ netsh advfirewall firewall set rule group="Windows Remote Management" new enable
 
 3. Create an Ansible user:
 
-```powershell
+```
 net user ansibleadmin "P@ssw0rd123!" /add
 net localgroup administrators ansibleadmin /add
 ```
@@ -96,9 +97,9 @@ net localgroup administrators ansibleadmin /add
 
 ## 🔹 Step 3: Confirm Port 5985 Is Open
 
-From local terminal:
+From local (VS code) terminal:
 
-```bash
+```
 nmap -Pn -p 5985 <ec2-public-ip>
 ```
 
@@ -112,7 +113,7 @@ Expected output:
 
 ## 🔹 Step 4: Create `inventory.yml`
 
-```yaml
+```
 all:
   hosts:
     windows_server:
@@ -129,13 +130,13 @@ all:
 
 ## 🔹 Step 5: Test the Ansible Connection
 
-```bash
+```
 ansible windows_server -i inventory.yml -m win_ping
 ```
 
 Expected result:
 
-```json
+```
 windows_server | SUCCESS => {
     "changed": false,
     "ping": "pong"
@@ -148,7 +149,7 @@ windows_server | SUCCESS => {
 
 Save as `create_windows_users.yml`:
 
-```yaml
+```
 ---
 - name: Create 5 local users on Windows Server
   hosts: windows_server
@@ -173,7 +174,7 @@ Save as `create_windows_users.yml`:
 
 ## 🔹 Step 7: Run the Playbook
 
-```bash
+```
 ansible-playbook -i inventory.yml create_windows_users.yml
 ```
 
@@ -191,7 +192,7 @@ ok: [windows_server] => (item=user2)
 
 In PowerShell (on the instance):
 
-```powershell
+```
 net user
 ```
 
@@ -207,23 +208,5 @@ user5
 
 ---
 
-## ✅ Summary Table
+![image](https://github.com/user-attachments/assets/8fcc0952-1f03-4201-b3eb-d4166b062056)
 
-| Step | Action                       | Status |
-| ---- | ---------------------------- | ------ |
-| 1    | Launch Windows Server EC2    | ✅      |
-| 2    | Enable WinRM and create user | ✅      |
-| 3    | Open port 5985               | ✅      |
-| 4    | Configure `inventory.yml`    | ✅      |
-| 5    | Test WinRM with `win_ping`   | ✅      |
-| 6    | Create playbook to add users | ✅      |
-| 7    | Run playbook                 | ✅      |
-| 8    | Verify users                 | ✅      |
-
----
-
-**Optional Next Steps:**
-
-* Use Ansible Vault to secure passwords
-* Add users to other groups like `Remote Desktop Users`
-* Configure WinRM over HTTPS (port 5986) for production
